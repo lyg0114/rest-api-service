@@ -12,9 +12,9 @@ public class UserDaoService {
   private static int userConunt = 3;
 
   static {
-    users.add(new User(1, "user1", new Date()));
-    users.add(new User(2, "user2", new Date()));
-    users.add(new User(3, "user3", new Date()));
+    users.add(User.builder().id(1).name("user1").joinDate(new Date()).build());
+    users.add(User.builder().id(2).name("user2").joinDate(new Date()).build());
+    users.add(User.builder().id(3).name("user3").joinDate(new Date()).build());
   }
 
   public List<User> findAll() {
@@ -50,4 +50,15 @@ public class UserDaoService {
     return null;
   }
 
+  public User updabeById(int id, User user){
+    Iterator<User> itr = users.iterator();
+    while(itr.hasNext()){
+      User targetUser = itr.next();
+      if(targetUser.getId() == id){
+        targetUser.update(user);
+        return targetUser;
+      }
+    }
+    return null;
+  }
 }
