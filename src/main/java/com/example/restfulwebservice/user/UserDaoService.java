@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 public class UserDaoService {
+
   private static List<User> users = new ArrayList<User>();
   private static int userConunt = 3;
 
@@ -34,4 +35,5 @@ public class UserDaoService {
     }
     return null;
   }
+
 }
