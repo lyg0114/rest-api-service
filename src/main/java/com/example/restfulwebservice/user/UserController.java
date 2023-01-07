@@ -26,7 +26,6 @@ public class UserController {
 
   @GetMapping(path = "/users/{id}")
   public User retrieveAllUser(@PathVariable int id) {
-    User user = service.findOne(id);
     return service.findOne(id);
   }
 
