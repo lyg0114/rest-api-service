@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
@@ -25,27 +27,34 @@ public class UserController {
   @GetMapping(path = "/users/{id}")
   public User retrieveAllUser(@PathVariable int id) {
     User user = service.findOne(id);
-    if(user == null)
-      throw new UserNotFoundException(String.format("ID[ %s ] not found", id));
     return service.findOne(id);
   }
 
   @PostMapping("/users")
   public ResponseEntity<User> createUser(@RequestBody User user) {
     User savedUser = service.save(user);
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(savedUser.getId())
-        .toUri();
     return ResponseEntity
-        .created(location)
+        .created(getUri(savedUser))
         .build();
   }
 
   @DeleteMapping("/users/{id}")
   public void deleteUser(@PathVariable int id) {
-    User user = service.deleteById(id);
-    if(user == null)
-      throw new UserNotFoundException(String.format("ID[ %s ] not found", id));
+    service.deleteById(id);
+  }
+
+  @PutMapping("/users/{id}")
+  public ResponseEntity<User> deleteUser(@PathVariable int id, @RequestBody User updateUser) {
+    User updatedUser = service.updabeById(id, updateUser);
+    return ResponseEntity
+        .created(getUri(updatedUser))
+        .build();
+  }
+
+  private URI getUri(User updatedUser) {
+    return ServletUriComponentsBuilder
+        .fromCurrentRequest()
+        .buildAndExpand(updatedUser.getId())
+        .toUri();
   }
 }

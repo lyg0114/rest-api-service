@@ -35,7 +35,7 @@ public class UserDaoService {
         return user;
       }
     }
-    return null;
+    throw new UserNotFoundException(String.format("ID[ %s ] not found", id));
   }
 
   public User deleteById(int id){
@@ -47,7 +47,7 @@ public class UserDaoService {
         return user;
       }
     }
-    return null;
+    throw new UserNotFoundException(String.format("ID[ %s ] not found", id));
   }
 
   public User updabeById(int id, User user){
@@ -59,6 +59,6 @@ public class UserDaoService {
         return targetUser;
       }
     }
-    return null;
+    throw new UserNotFoundException(String.format("ID[ %s ] not found", id));
   }
 }
