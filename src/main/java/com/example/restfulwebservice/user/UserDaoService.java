@@ -3,9 +3,10 @@ package com.example.restfulwebservice.user;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserDaoService {
-
   private static List<User> users = new ArrayList<User>();
   private static int userConunt = 3;
 
@@ -35,5 +36,4 @@ public class UserDaoService {
     }
     return null;
   }
-
 }
