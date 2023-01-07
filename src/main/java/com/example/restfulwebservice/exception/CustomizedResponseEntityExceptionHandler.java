@@ -2,8 +2,10 @@ package com.example.restfulwebservice.exception;
 
 import com.example.restfulwebservice.user.UserNotFoundException;
 import java.util.Date;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestController
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+  private final String VALIDATION_FAIL = "Validation Failed";
 
   @ExceptionHandler(Exception.class)
   public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
@@ -23,10 +26,19 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   }
 
   @ExceptionHandler(UserNotFoundException.class)
-  public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+  public final ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex,
+      WebRequest request) {
     ExceptionResponse exceptionResponse = new ExceptionResponse(
         new Date(), ex.getMessage(), request.getDescription(false)
     );
     return new ResponseEntity(exceptionResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    ExceptionResponse exceptionResponse = new ExceptionResponse(
+        new Date(), VALIDATION_FAIL, ex.getMessage().toString());
+    return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
   }
 }

@@ -2,6 +2,7 @@ package com.example.restfulwebservice.user;
 
 import java.net.URI;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +31,7 @@ public class UserController {
   }
 
   @PostMapping("/users")
-  public ResponseEntity<User> createUser(@RequestBody User user) {
+  public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
     User savedUser = service.save(user);
     return ResponseEntity
         .created(getUri(savedUser))
