@@ -23,6 +23,9 @@ public class UserController {
 
   @GetMapping(path = "/users/{id}")
   public User retrieveAllUser(@PathVariable int id) {
+    User user = service.findOne(id);
+    if(user == null)
+      throw new UserNotFoundException(String.format("ID[%s] not found", id));
     return service.findOne(id);
   }
 
@@ -33,6 +36,8 @@ public class UserController {
         .path("/{id}")
         .buildAndExpand(savedUser.getId())
         .toUri();
-    return ResponseEntity.created(location).build();
+    return ResponseEntity
+        .created(location)
+        .build();
   }
 }
