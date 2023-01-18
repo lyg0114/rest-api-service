@@ -12,9 +12,9 @@ public class UserDaoService {
   private static int userConunt = 3;
 
   static {
-    users.add(User.builder().id(1).name("user1").joinDate(new Date()).build());
-    users.add(User.builder().id(2).name("user2").joinDate(new Date()).build());
-    users.add(User.builder().id(3).name("user3").joinDate(new Date()).build());
+    users.add(User.builder().id(1).name("user1").joinDate(new Date()).password("pass1").ssn("701010-111111").build());
+    users.add(User.builder().id(2).name("user2").joinDate(new Date()).password("pass2").ssn("801010-111111").build());
+    users.add(User.builder().id(3).name("user3").joinDate(new Date()).password("pass3").ssn("901010-111111").build());
   }
 
   public List<User> findAll() {
