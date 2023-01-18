@@ -1,6 +1,6 @@
 package com.example.restfulwebservice.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import java.util.Date;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-@JsonIgnoreProperties(value = {"password", "ssn"})
+@JsonFilter("UserInfo")
 @Data
 @Builder
 @AllArgsConstructor
