@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,29 +16,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminUserController {
+
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
   public MappingJacksonValue retrieveAllUsers() {
     List<User> users = service.findAll();
     MappingJacksonValue mapping = new MappingJacksonValue(users);
-    mapping.setFilters(getFilterProvider());
+    mapping.setFilters(getFilterProviderV1());
     return mapping;
   }
 
-  @GetMapping(path = "/users/{id}")
-  public MappingJacksonValue retrieveAllUser(@PathVariable int id) {
+  @GetMapping(path = "/v1/users/{id}")
+  public MappingJacksonValue retrieveAllUserV1(@PathVariable int id) {
     User user = service.findOne(id);
     MappingJacksonValue mapping = new MappingJacksonValue(user);
-    mapping.setFilters(getFilterProvider());
+    mapping.setFilters(getFilterProviderV1());
     return mapping;
   }
 
-  private FilterProvider getFilterProvider() {
+  @GetMapping(path = "/v2/users/{id}")
+  public MappingJacksonValue retrieveAllUserV2(@PathVariable int id) {
+    User user = service.findOne(id);
+    UserV2 userV2 = new UserV2();
+    BeanUtils.copyProperties(user, userV2);
+    userV2.setGrade("VIP");
+
+    MappingJacksonValue mapping = new MappingJacksonValue(userV2);
+    mapping.setFilters(getFilterProviderV2());
+    return mapping;
+  }
+
+  private FilterProvider getFilterProviderV1() {
     String[] filterStr = {"id", "name", "joinDate", "password", "ssn"};
     SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
         .filterOutAllExcept(filterStr);
     return new SimpleFilterProvider()
         .addFilter("UserInfo", filter);
+  }
+
+  private FilterProvider getFilterProviderV2() {
+    String[] filterStr = {"id", "name", "joinDate", "grade"};
+    SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
+        .filterOutAllExcept(filterStr);
+    return new SimpleFilterProvider()
+        .addFilter("UserInfoV2", filter);
   }
 }
