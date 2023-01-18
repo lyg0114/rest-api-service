@@ -15,25 +15,29 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminUserController {
-
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
-  public List<User> retrieveAllUsers() {
-    return service.findAll();
+  public MappingJacksonValue retrieveAllUsers() {
+    List<User> users = service.findAll();
+    MappingJacksonValue mapping = new MappingJacksonValue(users);
+    mapping.setFilters(getFilterProvider());
+    return mapping;
   }
 
   @GetMapping(path = "/users/{id}")
   public MappingJacksonValue retrieveAllUser(@PathVariable int id) {
     User user = service.findOne(id);
-    String[] filterStr = {"id", "name", "joinDate", "password", "ssn"};
-    SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
-        .filterOutAllExcept(filterStr);
-    FilterProvider filters = new SimpleFilterProvider()
-        .addFilter("UserInfo", filter);
     MappingJacksonValue mapping = new MappingJacksonValue(user);
-    mapping.setFilters(filters);
+    mapping.setFilters(getFilterProvider());
     return mapping;
   }
 
+  private FilterProvider getFilterProvider() {
+    String[] filterStr = {"id", "name", "joinDate", "password", "ssn"};
+    SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter
+        .filterOutAllExcept(filterStr);
+    return new SimpleFilterProvider()
+        .addFilter("UserInfo", filter);
+  }
 }
