@@ -1,5 +1,6 @@
 package com.example.restfulwebservice.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
@@ -20,8 +21,9 @@ public class User {
   @Past
   private Date joinDate;
   private Date updateDate;
-
+  @JsonIgnore
   private String password;
+  @JsonIgnore
   private String ssn;
 
   public void update(User updateUser) {
