@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 @JsonFilter("UserInfo")
@@ -31,5 +32,12 @@ public class User {
       this.name = updateUser.getName();
     }
     this.updateDate = new Date();
+  }
+
+  public UserV2 convertToV2() {
+    UserV2 userV2 = new UserV2();
+    BeanUtils.copyProperties(this, userV2);
+    userV2.setGrade("VIP");
+    return userV2;
   }
 }
