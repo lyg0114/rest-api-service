@@ -1,9 +1,14 @@
 package com.example.restfulwebservice.user;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
@@ -25,8 +31,12 @@ public class UserController {
   }
 
   @GetMapping(path = "/users/{id}")
-  public User retrieveAllUser(@PathVariable int id) {
-    return service.findOne(id);
+  public EntityModel<User> retrieveAllUser(@PathVariable int id) {
+    User user = service.findOne(id);
+    EntityModel<User> model = EntityModel.of(user);
+    WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+    model.add(linkTo.withRel("all-users"));
+    return model;
   }
 
   @PostMapping("/users")
