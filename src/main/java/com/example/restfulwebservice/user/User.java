@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
-@JsonFilter("UserInfo")
+//@JsonFilter("UserInfo")
 @Data
 @Builder
 @AllArgsConstructor
