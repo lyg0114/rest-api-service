@@ -22,6 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
+
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
@@ -30,11 +31,18 @@ public class UserController {
   }
 
   @GetMapping(path = "/users/{id}")
-  public EntityModel<User> retrieveAllUser(@PathVariable int id) {
+  public EntityModel<User> retrieveUser(@PathVariable int id) {
     User user = service.findOne(id);
+    EntityModel<User> model = getUserEntityModel(id, user);
+    return model;
+  }
+
+  private EntityModel<User> getUserEntityModel(int id, User user) {
     EntityModel<User> model = EntityModel.of(user);
-    WebMvcLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAllUsers());
-    model.add(linkTo.withRel("all-users"));
+    WebMvcLinkBuilder linkToRetrieveAllUsers = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+    model.add(linkToRetrieveAllUsers.withRel("all-users"));
+    WebMvcLinkBuilder linkToNextUser = linkTo(methodOn(this.getClass()).retrieveUser(++id));
+    model.add(linkToNextUser.withRel("next-user"));
     return model;
   }
 
