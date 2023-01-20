@@ -22,7 +22,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-
   private final UserDaoService service;
 
   @GetMapping(path = "/users")
